@@ -78,10 +78,10 @@ for b in range(nb):  # in range(nb):
         # receipt_obj = receipt_obj[0]
         if not (receipt_obj['message_from_buyer'] is None):
             if not receipt_obj['message_from_buyer'] == '':
-                messages.append('Message: ' + receipt_obj["message_from_buyer"])
+                messages.append('Message: ' + receipt_obj["message_from_buyer"].replace('&#39;', "'").replace('&quot;', "'"))
         if not (receipt_obj['gift_message'] is None):
             if not receipt_obj['gift_message'] == '':
-                messages.append('Gift: ' + receipt_obj["gift_message"])
+                messages.append('Gift: ' + receipt_obj["gift_message"].replace('&#39;', "'").replace('&quot;', "'"))
         for t in range(len(transactions_this)):
             item_this = transactions_this[t]
             for q in range(item_this["quantity"]):
