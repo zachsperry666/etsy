@@ -70,14 +70,14 @@ def create_message(sender, to, subject, item_list, pay_method):
 
     num_items = len(item_list)
 
-    if pay_method == "Venmo":
+    if pay_method == "venmo":
 
         insert += """\
         <p>If we have your <b>Venmo</b> information, you should soon receive a request from 
         Anthony-Dodge. Please hit 'Pay' on the request to complete. If you have not sent us Venmo your information 
         yet, please contact us through <a href='https://www.instagram.com/succielife'>Instagram (@succielife)</a>.</p> """
 
-    elif pay_method == "Paypal":
+    elif pay_method == "paypal":
 
         insert += """\
         <p>If you are paying via <b>Paypal</b>, please generate a payment for the invoice total to 
@@ -86,7 +86,7 @@ def create_message(sender, to, subject, item_list, pay_method):
 
     else:
         insert += """\
-        <p>For payments with Zelle or another method, please send us payment information through <a 
+        <p>For payments with Zelle, Quickpay or another method, please send us payment information through <a 
         href="https://www.instagram.com/succielife">Instagram (@succielife)</a>. If you have already done so, 
         you can expect a payment request soon.</p> </p> """
 

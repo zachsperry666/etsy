@@ -12,10 +12,14 @@ root.withdraw()
 invoice_file_path = filedialog.askopenfilename(title="Choose invoice file:",filetypes=[("Excel files", ".xlsx .xls")])
 
 invoice_data = pd.read_excel(invoice_file_path)
+invoice_data["Instagram User"] = invoice_data["Instagram User"].str.lower()
 
 master_file_path = filedialog.askopenfilename(title="Choose master customer list file:",filetypes=[("Excel files", ".xlsx .xls")])
 
 master_data = pd.read_excel(master_file_path)
+
+master_file_path["Instagram User"] = master_file_path["Instagram User"].str.lower()
+master_file_path["Payment"] = master_file_path["Payment"].str.lower()
 
 data = pd.merge(invoice_data, master_data, how='left', on=None, left_on=None, right_on=None,
          left_index=False, right_index=False, sort=True,
@@ -49,7 +53,7 @@ for b in range(nb):
     buyer_email = data_b.iloc[0]['Email']
     this_mess = create_message("succielife@gmail.com",buyer_email,subject,item_list,pay_method)
     send_message("me",this_mess)
-    if pay_method=='Venmo':
+    if pay_method=='venmo':
         total = item_list["Price"].sum()
         if total > 100:
             shipping_price = 0
@@ -57,6 +61,6 @@ for b in range(nb):
             shipping_price = 5
         total_price = total + shipping_price
         try:
-            venmo_req(data_b.iloc[0]['User'], float(total_price), "Succielife Invoice (see email for details)")
+            venmo_req(data_b.iloc[0]['Venmo User'], float(total_price), "Succielife Invoice (see email for details)")
         except:
             print("Couldn't generate Venmo request for: " + data_b.iloc[0]['Instagram User'] + " (Venmo user: " + data_b.iloc[0]['User'] + ")")
