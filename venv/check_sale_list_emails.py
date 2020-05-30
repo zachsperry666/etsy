@@ -26,41 +26,10 @@ data = pd.merge(invoice_data, master_data, how='left', on=None, left_on=None, ri
          suffixes=('_x', '_y'), copy=True, indicator=False,
          validate=None)
 
-error_table = data["Instagram User"][data["Email"].isna()]
+error_table_email = data["Instagram User"][data["Email"].isna()]
+error_table_venmo = data["Instagram User"][data["Venmo Username"].isna() & data["Payment"]=="venmo"]
 
 if len(error_table)>0:
     print("The following users have no valid email:")
     print(error_table)
     exit()
-
-#print(data)
-
-buyers = data["Instagram User"].unique()
-
-nb = len(buyers)
-
-#print(nb)
-
-subject = "Your Succielife Invoice"
-
-for b in range(nb):
-    #print('b='+str(b))
-    data_b = data[data["Instagram User"] == buyers[b]]
-    item_list=pd.DataFrame(columns=['Names','Price'])
-    item_list["Names"] = data_b["Names"]
-    item_list["Price"] = data_b["Price"]
-    pay_method = data_b.iloc[0]['Payment']
-    buyer_email = data_b.iloc[0]['Email']
-    this_mess = create_message("succielife@gmail.com",buyer_email,subject,item_list,pay_method)
-    send_message("me",this_mess)
-    if pay_method=='venmo':
-        total = item_list["Price"].sum()
-        if total > 100:
-            shipping_price = 0
-        else:
-            shipping_price = 5
-        total_price = total + shipping_price
-        try:
-            venmo_req(data_b.iloc[0]['Venmo Username'], float(total_price), "Succielife Invoice (see email for details)")
-        except:
-            print("Couldn't generate Venmo request for: " + data_b.iloc[0]['Instagram User'] + " (Venmo user: " + data_b.iloc[0]['User'] + ")")
