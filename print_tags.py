@@ -26,6 +26,7 @@ while len(receipts_this) > 0:
     i = i + 1
     receipts_all.extend(receipts_this)
     receipts_this = etsy.findAllShopReceipts(shop_id='19387834', min_created=unixtime, limit=100, page=i)
+    time.sleep(0.12)
 
 print('Receipts collected...')
 data = pd.DataFrame(receipts_all)
@@ -74,6 +75,7 @@ for b in range(nb):  # in range(nb):
         # print(receipt_this)
         transactions_this = etsy.findAllShop_Receipt2Transactions(receipt_id=receipt_this,
                                                                   limit=100)  # turn back on printing url in requests.sessions
+        time.sleep(0.12)
         receipt_obj = next(item for item in receipts_all if item["receipt_id"] == receipt_this)
         # receipt_obj = receipt_obj[0]
         if not (receipt_obj['message_from_buyer'] is None):
