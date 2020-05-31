@@ -51,7 +51,7 @@ def create_message(sender, to, subject, item_list, pay_method):
     </div>
     
     <p>If you would like to combine your live sale order with an Etsy order, we are happy to do so! Just send me a 
-    message after you place your order on Etsy. Our Etsy shop can be found here. <a href="www.succielife.etsy.com">here</a>.</p> 
+    message after you place your order on Etsy. Our Etsy shop can be found <a href="www.succielife.etsy.com">here</a>.</p> 
     
     <p>Thank you for your support of our small business! Plants will be shipped in the next few days. If you ever 
     have comments, questions, or concerns, please don’t hesitate to reach out to us on <a 
@@ -100,17 +100,18 @@ def create_message(sender, to, subject, item_list, pay_method):
     </style>
         <table style="width:50%">
           <tr>
-            <th align="left">Item Name</th>
-            <th align="left">Price</th>
+            <th align="left"><u>Item Name</u></th>
+            <th align="left"><u>Price</u></th>
           </tr>
           """
 
     for i in range(num_items):
-        insert += '<tr><td>' + item_list.iloc[i]['Names'] + '</td><td>' + str(item_list.iloc[i]['Price']) + '</td></tr>'
+        insert += '<tr><td>' + item_list.iloc[i]['Names'] + '</td><td>' + str("{:.2f}".format(item_list.iloc[i]['Price'])) + '</td></tr>'
 
-    insert += '<tr><td>Shipping</td><td>' + str(shipping_price) + '</td></tr>'
+    insert += '<tr><td><i><u>Shipping</u></i></td><td><i><u>' + str("{:.2f}".format(shipping_price)) + '</u></i></td' \
+                                                                                                       '></tr> '
 
-    insert += '<tr><td><b>Total:<b></td><td><b>' + str(total_price) + '<b></td></tr></table>'
+    insert += '<tr><td><b>Total:<b></td><td><b>' + str("{:.2f}".format(total_price)) + '<b></td></tr></table>'
 
     soup = Soup(html, features="html.parser")
     soup.div.append(Soup('<div>' + insert + '</div>', features="html.parser"))

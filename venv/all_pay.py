@@ -1,4 +1,4 @@
-from venmo_request import venmo_req
+from venmo_request import venmo_req , venmo_auth
 from paypal_request import paypal_req
 from send_gmail import create_message
 from send_gmail import send_message
@@ -8,6 +8,7 @@ import pandas as pd
 
 root = tk.Tk()
 root.withdraw()
+venmo = venmo_auth()
 
 invoice_file_path = filedialog.askopenfilename(title="Choose invoice file:",filetypes=[("Excel files", ".xlsx .xls")])
 
@@ -45,6 +46,7 @@ subject = "Your Succielife Invoice"
 
 for b in range(nb):
     #print('b='+str(b))
+    print(buyers[b])
     data_b = data[data["Instagram User"] == buyers[b]]
     item_list=pd.DataFrame(columns=['Names','Price'])
     item_list["Names"] = data_b["Names"]
@@ -61,6 +63,6 @@ for b in range(nb):
             shipping_price = 5
         total_price = total + shipping_price
         try:
-            venmo_req(data_b.iloc[0]['Venmo Username'], float(total_price), "Succielife! Thank you!")
+            venmo_req(venmo,data_b.iloc[0]['Venmo Username'], float(total_price), "Succielife! Thank you!")
         except:
-            print("Couldn't generate Venmo request for: " + data_b.iloc[0]['Instagram User'] + " (Venmo user: " + data_b.iloc[0]['User'] + ")")
+            print("Couldn't generate Venmo request for: " + data_b.iloc[0]['Instagram User'] + " (Venmo user: " + data_b.iloc[0]['Venmo Username'] + ")")

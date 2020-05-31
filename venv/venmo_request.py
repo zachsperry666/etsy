@@ -2,13 +2,16 @@ from venmo_api import Client
 
 # Get your access token. You will need to complete the 2FA process
 # try:
-
-def venmo_req(username_req,price,item):
+def venmo_auth():
     access_token = Client.get_access_token(username='Anthony-Dodge',
                                        password='Cello13!',
                                        device_id='31638645-37M7-9D77-50Y8-6JE79O164ND8')
 
     venmo = Client(access_token=access_token)
+
+    return venmo
+
+def venmo_req(venmo,username_req,price,item):
 
 # Search for users. You get 50 results per page.
     users = venmo.user.search_for_users(query=username_req,
