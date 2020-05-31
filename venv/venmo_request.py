@@ -4,8 +4,8 @@ from venmo_api import Client
 # try:
 
 def venmo_req(username_req,price,item):
-    access_token = Client.get_access_token(username='ZachSperry624',
-                                       password='Ncc-1701D',
+    access_token = Client.get_access_token(username='Anthony-Dodge',
+                                       password='Cello13!',
                                        device_id='31638645-37M7-9D77-50Y8-6JE79O164ND8')
 
     venmo = Client(access_token=access_token)
@@ -26,5 +26,3 @@ def venmo_req(username_req,price,item):
 #                             callback=callback,
 #                             page=2,
 #                             count=10)
-
-venmo_req("Anthony-Dodge", 107 ,  "Succielife Invoice (see email for details)")

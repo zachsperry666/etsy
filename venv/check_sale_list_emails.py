@@ -18,8 +18,8 @@ master_file_path = filedialog.askopenfilename(title="Choose master customer list
 
 master_data = pd.read_excel(master_file_path)
 
-master_file_path["Instagram User"] = master_file_path["Instagram User"].str.lower()
-master_file_path["Payment"] = master_file_path["Payment"].str.lower()
+master_data["Instagram User"] = master_data["Instagram User"].str.lower()
+master_data["Payment"] = master_data["Payment"].str.lower()
 
 data = pd.merge(invoice_data, master_data, how='left', on=None, left_on=None, right_on=None,
          left_index=False, right_index=False, sort=True,
@@ -28,8 +28,18 @@ data = pd.merge(invoice_data, master_data, how='left', on=None, left_on=None, ri
 
 error_table_email = data["Instagram User"][data["Email"].isna()]
 error_table_venmo = data["Instagram User"][data["Venmo Username"].isna() & data["Payment"]=="venmo"]
+error_table_pay = data["Instagram User"][data["Payment"].isna()]
 
-if len(error_table)>0:
+pd.set_option('display.max_rows', None)
+
+if len(error_table_email)>0:
     print("The following users have no valid email:")
-    print(error_table)
-    exit()
+    print(error_table_email.unique())
+
+if len(error_table_venmo)>0:
+    print("The following users have no valid venmo:")
+    print(error_table_venmo.unique())
+
+if len(error_table_pay)>0:
+    print("The following users have no payment method listed:")
+    print(error_table_pay.unique())
