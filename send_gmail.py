@@ -51,7 +51,7 @@ def create_message(sender, to, subject, item_list, pay_method):
     </div>
     
     <p>If you would like to combine your live sale order with an Etsy order, we are happy to do so! Just send me a 
-    message after you place your order on Etsy. Our Etsy shop can be found here. href="www.succielife.etsy.com">here</a></p>. 
+    message after you place your order on Etsy. Our Etsy shop can be found here. <a href="www.succielife.etsy.com">here</a>.</p> 
     
     <p>Thank you for your support of our small business! Plants will be shipped in the next few days. If you ever 
     have comments, questions, or concerns, please don’t hesitate to reach out to us on <a 
@@ -108,7 +108,7 @@ def create_message(sender, to, subject, item_list, pay_method):
     for i in range(num_items):
         insert += '<tr><td>' + item_list.iloc[i]['Names'] + '</td><td>' + str(item_list.iloc[i]['Price']) + '</td></tr>'
 
-    insert += '<tr><td><u>Shipping<u></td><td><u>' + str(shipping_price) + '<u></td></tr>'
+    insert += '<tr><td>Shipping</td><td>' + str(shipping_price) + '</td></tr>'
 
     insert += '<tr><td><b>Total:<b></td><td><b>' + str(total_price) + '<b></td></tr></table>'
 
