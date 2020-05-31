@@ -61,6 +61,6 @@ for b in range(nb):
             shipping_price = 5
         total_price = total + shipping_price
         try:
-            venmo_req(data_b.iloc[0]['Venmo Username'], float(total_price), "Succielife Invoice (see email for details)")
+            venmo_req(data_b.iloc[0]['Venmo Username'], float(total_price), "Succielife! Thank you!")
         except:
             print("Couldn't generate Venmo request for: " + data_b.iloc[0]['Instagram User'] + " (Venmo user: " + data_b.iloc[0]['User'] + ")")

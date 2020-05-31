@@ -45,16 +45,17 @@ def create_message(sender, to, subject, item_list, pay_method):
 
     <h2>Your Succielife Invoice</h2>
     
-    <p>Thank you for your purchase! Your invoice and instructions for payment are below.</p>
+    <p>Thank you for tuning in to another live sale! Please find your invoice and instructions for payment below.</p>
 
     <div>
     </div>
     
-    <p>I work hard to bring you beautiful and unique succulents at crazy good prices!
-    If you ever have comments, questions, or concerns, reach out to me at
-    <a href="https://www.instagram.com/succielife">Instagram (@succielife)</a>.</p>
+    <p>If you would like to combine your live sale order with an Etsy order, we are happy to do so! Just send me a 
+    message after you place your order on Etsy. Our Etsy shop can be found here. href="www.succielife.etsy.com">here</a></p>. 
     
-    <a href="https://ibb.co/QFQXR5t"><img src="https://i.ibb.co/SXyJ8LG/succie-life-word-logo.png" alt="succie-life-word-logo" border="0" width="167" height="89"></a>
+    <p>Thank you for your support of our small business! Plants will be shipped in the next few days. If you ever 
+    have comments, questions, or concerns, please don’t hesitate to reach out to us on <a 
+    href="https://www.instagram.com/succielife">Instagram (@succielife)</a>.</p> 
     
     </body>
     </html>
@@ -73,24 +74,30 @@ def create_message(sender, to, subject, item_list, pay_method):
     if pay_method == "venmo":
 
         insert += """\
-        <p>If we have your <b>Venmo</b> information, you should soon receive a request from 
-        Anthony-Dodge. Please hit 'Pay' on the request to complete. If you have not sent us Venmo your information 
-        yet, please contact us through <a href='https://www.instagram.com/succielife'>Instagram (@succielife)</a>.</p> """
+        <p>If you have requested to pay via Venmo, you should soon receive a request from 
+        Anthony-Dodge. Please hit 'Pay' on the request to complete. If you do not receive a request, please let us 
+        know. </p> """
 
     elif pay_method == "paypal":
 
         insert += """\
-        <p>If you are paying via <b>Paypal</b>, please generate a payment for the invoice total to 
-        <b>mvhs_celloplayer@yahoo.com</b>. You can start the process <a 
-        href="https://www.paypal.com/us/for-you/transfer-money/send-money">here</a>.</p> """
+        <p>For payments via Paypal, please send payment for invoice total to succielife@gmail.com. You 
+        can start the process <a href="https://www.paypal.com/us/for-you/transfer-money/send-money">here</a>.</p> """
 
     else:
         insert += """\
-        <p>For payments with Zelle, Quickpay or another method, please send us payment information through <a 
-        href="https://www.instagram.com/succielife">Instagram (@succielife)</a>. If you have already done so, 
-        you can expect a payment request soon.</p> </p> """
+        <p>For payments with Zelle or Quickpay, please send payment to Anthony Dodge - dodg0091@umn.edu. </p> </p> """
 
     insert += """\
+        <style>
+      table,
+      th,
+      td {
+        padding: 10px;
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+    </style>
         <table style="width:50%">
           <tr>
             <th align="left">Item Name</th>
