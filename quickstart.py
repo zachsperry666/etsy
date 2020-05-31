@@ -6,7 +6,9 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 # If modifying these scopes, delete the file token.pickle.
-SCOPES = ['https://mail.google.com/']
+SCOPES = ['https://mail.google.com/','https://www.googleapis.com/auth/spreadsheets', "https://www.googleapis.com/auth"
+                                                                                     "/drive"]
+
 
 def main():
     """Shows basic usage of the Gmail API.

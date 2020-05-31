@@ -5,20 +5,30 @@ from send_gmail import send_message
 import tkinter as tk
 from tkinter import filedialog
 import pandas as pd
+from get_google_sheet import gsheet2df, open_service
 
 root = tk.Tk()
 root.withdraw()
 venmo = venmo_auth()
 
-invoice_file_path = filedialog.askopenfilename(title="Choose invoice file:",filetypes=[("Excel files", ".xlsx .xls")])
+# invoice_file_path = filedialog.askopenfilename(title="Choose invoice file:",filetypes=[("Excel files", ".xlsx .xls")])
 
-invoice_data = pd.read_excel(invoice_file_path)
+# invoice_data = pd.read_excel(invoice_file_path)
+
+MASTER_ID = '1-Et2zIxQq28ZNXkeiWCO976QKlIPOvoFs9VIwIyddhA'
+SALES_ID = '1tIFKnnx26bIDO0SGnsMADLBIlx35jFObH_gJP_J8JiY'
+
+invoice_sheet = open_service(SALES_ID,input('Input Live Sale Sheet ID: '))
+master_sheet = open_service(MASTER_ID,'Sheet1')
+invoice_data = gsheet2df(invoice_sheet)
+
 invoice_data["Instagram User"] = invoice_data["Instagram User"].str.lower()
 
-master_file_path = filedialog.askopenfilename(title="Choose master customer list file:",filetypes=[("Excel files", ".xlsx .xls")])
+# master_file_path = filedialog.askopenfilename(title="Choose master customer list file:",filetypes=[("Excel files", ".xlsx .xls")])
 
-master_data = pd.read_excel(master_file_path)
+# master_data = pd.read_excel(master_file_path)
 
+master_data=gsheet2df(master_sheet)
 master_data["Instagram User"] = master_data["Instagram User"].str.lower()
 master_data["Payment"] = master_data["Payment"].str.lower()
 
