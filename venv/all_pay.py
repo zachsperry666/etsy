@@ -18,8 +18,8 @@ master_file_path = filedialog.askopenfilename(title="Choose master customer list
 
 master_data = pd.read_excel(master_file_path)
 
-master_file_path["Instagram User"] = master_file_path["Instagram User"].str.lower()
-master_file_path["Payment"] = master_file_path["Payment"].str.lower()
+master_data["Instagram User"] = master_data["Instagram User"].str.lower()
+master_data["Payment"] = master_data["Payment"].str.lower()
 
 data = pd.merge(invoice_data, master_data, how='left', on=None, left_on=None, right_on=None,
          left_index=False, right_index=False, sort=True,
