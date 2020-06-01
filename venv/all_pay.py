@@ -40,7 +40,8 @@ for b in range(nb):
     item_list["Price"] = data_b["Price"]
     pay_method = data_b.iloc[0]['Payment']
     buyer_email = data_b.iloc[0]['Email']
-    this_mess = create_message("succielife@gmail.com",buyer_email,subject,item_list,pay_method)
+    taxable = data_b.iloc[0]['California?']
+    this_mess = create_message("succielife@gmail.com",buyer_email,subject,item_list,pay_method,taxable)
     send_message("me",this_mess)
     if pay_method=='venmo':
         total = item_list["Price"].sum()

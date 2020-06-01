@@ -36,7 +36,8 @@ def open_service():
     return service
 
 
-def create_message(sender, to, subject, item_list, pay_method):
+def create_message(sender, to, subject, item_list, pay_method, taxable):
+    tax_rate = 0.0975
     # Create the plain-text and HTML version of your message
 
     html = """\
@@ -106,12 +107,18 @@ def create_message(sender, to, subject, item_list, pay_method):
           """
 
     for i in range(num_items):
-        insert += '<tr><td>' + item_list.iloc[i]['Names'] + '</td><td>' + str("{:.2f}".format(item_list.iloc[i]['Price'])) + '</td></tr>'
+        insert += '<tr><td>' + item_list.iloc[i]['Names'] + '</td><td>' + str(
+            "{:.2f}".format(item_list.iloc[i]['Price'])) + '</td></tr>'
+
+    if taxable:
+        tax = total_price * tax_rate
+        insert += '<tr><td><i>Tax:</i></td><td><i>' + str("{:.2f}".format(tax)) + '</i></td></tr></table>'
+        total_price = total_price + tax
 
     insert += '<tr><td><i><u>Shipping</u></i></td><td><i><u>' + str("{:.2f}".format(shipping_price)) + '</u></i></td' \
                                                                                                        '></tr> '
 
-    insert += '<tr><td><b>Total:<b></td><td><b>' + str("{:.2f}".format(total_price)) + '<b></td></tr></table>'
+    insert += '<tr><td><b>Total:</b></td><td><b>' + str("{:.2f}".format(total_price)) + '<b></td></tr></table>'
 
     soup = Soup(html, features="html.parser")
     soup.div.append(Soup('<div>' + insert + '</div>', features="html.parser"))
