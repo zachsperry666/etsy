@@ -93,3 +93,6 @@ def load_and_check():
         return stop
     else:
         return data
+
+if __name==('__main__'):
+    load_and_check()
