@@ -39,7 +39,7 @@ def load_and_check():
 
     invoice_sheet = open_service(SALES_ID, input('Input Live Sale Sheet ID: '))
     master_sheet = open_service(MASTER_ID, 'Sheet1')
-    invoice_data = gsheet2df(invoice_sheet)
+    invoice_data = gsheet2df(invoice_sheet).drop_duplicates()
     # print(invoice_data)
     invoice_data["Instagram User"] = invoice_data["Instagram User"].str.lower()
 
@@ -47,7 +47,7 @@ def load_and_check():
 
     # master_data = pd.read_excel(master_file_path)
 
-    master_data = gsheet2df(master_sheet)
+    master_data = gsheet2df(master_sheet).drop_duplicates()
     master_data["Instagram User"] = master_data["Instagram User"].str.lower()
     master_data["Payment"] = master_data["Payment"].str.lower()
 
