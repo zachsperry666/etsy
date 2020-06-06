@@ -48,8 +48,8 @@ def load_and_check():
     # master_data = pd.read_excel(master_file_path)
 
     master_data = gsheet2df(master_sheet).drop_duplicates()
-    master_data["Instagram User"] = master_data["Instagram User"].str.lower()
-    master_data["Payment"] = master_data["Payment"].str.lower()
+    master_data["Instagram User"] = master_data["Instagram User"].str.lower().strip()
+    master_data["Payment"] = master_data["Payment"].str.lower().strip()
 
     data = pd.merge(invoice_data, master_data, how='left', on=None, left_on=None, right_on=None,
                     left_index=False, right_index=False, sort=True,
