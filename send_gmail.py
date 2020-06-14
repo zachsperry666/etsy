@@ -70,9 +70,7 @@ def create_message(sender, to, subject, item_list, pay_method, taxable, pickup):
         """
 
     insert = ""
-    print(item_list["Price"])
     total = item_list["Price"].astype(float).sum()
-    print(total)
     if total > 100:
         shipping_price = 0
     elif pickup == 'Y':
@@ -123,7 +121,6 @@ def create_message(sender, to, subject, item_list, pay_method, taxable, pickup):
 
     if taxable == 'Y':
         tax = total * tax_rate
-        print('Total ('+str(total)+') + Tax ('+str(tax)+')')
         insert += '<tr><td><i>Tax:</i></td><td><i>' + str("{:.2f}".format(tax)) + '</i></td></tr></table>'
         total_price = total_price + tax
 

@@ -40,7 +40,7 @@ def load_and_check():
     invoice_sheet = open_service(SALES_ID, input('Input Live Sale Sheet ID: '))
     master_sheet = open_service(MASTER_ID, 'Sheet1')
     invoice_data = gsheet2df(invoice_sheet).drop_duplicates()
-    # print(invoice_data)
+    print(invoice_data)
     invoice_data["Instagram User"] = invoice_data["Instagram User"].str.lower()
 
     # master_file_path = filedialog.askopenfilename(title="Choose master customer list file:",filetypes=[("Excel files", ".xlsx .xls")])
