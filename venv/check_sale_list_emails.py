@@ -48,8 +48,8 @@ def load_and_check():
     # master_data = pd.read_excel(master_file_path)
 
     master_data = gsheet2df(master_sheet).drop_duplicates()
-    master_data["Instagram User"] = master_data["Instagram User"].str.lower().strip()
-    master_data["Payment"] = master_data["Payment"].str.lower().strip()
+    master_data["Instagram User"] = master_data["Instagram User"].str.lower().str.strip()
+    master_data["Payment"] = master_data["Payment"].str.lower().str.strip()
 
     data = pd.merge(invoice_data, master_data, how='left', on=None, left_on=None, right_on=None,
                     left_index=False, right_index=False, sort=True,
@@ -57,7 +57,7 @@ def load_and_check():
                     validate=None)
 
     error_table_email1 = data["Instagram User"][data["Email"]=='']
-    error_table_email12 = data["Instagram User"][data["Email"].isna()]
+    error_table_email2 = data["Instagram User"][data["Email"].isna()]
     error_table_venmo = data["Instagram User"][data["Venmo Username"].isna() & data["Payment"] == "venmo"]
     error_table_pay = data["Instagram User"][data["Payment"].isna()]
 
@@ -94,5 +94,5 @@ def load_and_check():
     else:
         return data
 
-if __name==('__main__'):
+if __name__==('__main__'):
     load_and_check()

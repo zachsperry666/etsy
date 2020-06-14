@@ -15,6 +15,12 @@ from tkinter import filedialog
 import pandas as pd
 
 
+class Ret:
+    def __init__(self):
+        self.body = ""
+        self.total_price = 0
+
+
 def open_service():
     SCOPES = ['https://mail.google.com/']
     if os.path.exists("C:/Python/Projects/etsy/token.pickle"):
@@ -36,8 +42,9 @@ def open_service():
     return service
 
 
-def create_message(sender, to, subject, item_list, pay_method, taxable):
-    tax_rate = 0.0975
+def create_message(sender, to, subject, item_list, pay_method, taxable, pickup):
+    ret = Ret()
+    tax_rate = 0.0725
     # Create the plain-text and HTML version of your message
 
     html = """\
@@ -63,8 +70,12 @@ def create_message(sender, to, subject, item_list, pay_method, taxable):
         """
 
     insert = ""
-    total = item_list["Price"].sum()
+    print(item_list["Price"])
+    total = item_list["Price"].astype(float).sum()
+    print(total)
     if total > 100:
+        shipping_price = 0
+    elif pickup == 'Y':
         shipping_price = 0
     else:
         shipping_price = 5
@@ -108,10 +119,11 @@ def create_message(sender, to, subject, item_list, pay_method, taxable):
 
     for i in range(num_items):
         insert += '<tr><td>' + item_list.iloc[i]['Names'] + '</td><td>' + str(
-            "{:.2f}".format(item_list.iloc[i]['Price'])) + '</td></tr>'
+            "{:.2f}".format(float(item_list.iloc[i]['Price']))) + '</td></tr>'
 
-    if taxable:
-        tax = total_price * tax_rate
+    if taxable == 'Y':
+        tax = total * tax_rate
+        print('Total ('+str(total)+') + Tax ('+str(tax)+')')
         insert += '<tr><td><i>Tax:</i></td><td><i>' + str("{:.2f}".format(tax)) + '</i></td></tr></table>'
         total_price = total_price + tax
 
@@ -137,8 +149,9 @@ def create_message(sender, to, subject, item_list, pay_method, taxable):
 
     raw = base64.urlsafe_b64encode(message.as_bytes())
     raw = raw.decode()
-    body = {'raw': raw}
-    return body
+    ret.body = {'raw': raw}
+    ret.total_price = total_price
+    return ret
 
 
 def create_draft(user_id, message_body):

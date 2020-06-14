@@ -41,16 +41,11 @@ for b in range(nb):
     pay_method = data_b.iloc[0]['Payment']
     buyer_email = data_b.iloc[0]['Email']
     taxable = data_b.iloc[0]['California?']
-    this_mess = create_message("succielife@gmail.com",buyer_email,subject,item_list,pay_method,taxable)
-    send_message("me",this_mess)
+    pickup = data_b.iloc[0]['Pickup?']
+    ret = create_message("succielife@gmail.com",buyer_email,subject,item_list,pay_method,taxable,pickup)
+    send_message("me",ret.body)
     if pay_method=='venmo':
-        total = item_list["Price"].sum()
-        if total > 100:
-            shipping_price = 0
-        else:
-            shipping_price = 5
-        total_price = total + shipping_price
         try:
-            venmo_req(venmo,data_b.iloc[0]['Venmo Username'], float(total_price), "Succielife! Thank you!")
+            venmo_req(venmo,data_b.iloc[0]['Venmo Username'], float(ret.total_price), "Succielife! Thank you!")
         except:
             print("Couldn't generate Venmo request for: " + data_b.iloc[0]['Instagram User'] + " (Venmo user: " + data_b.iloc[0]['Venmo Username'] + ")")
