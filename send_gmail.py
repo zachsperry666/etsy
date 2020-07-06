@@ -1,3 +1,5 @@
+# called by all_pay.py to send format invoice emails, including calculation of total price, shipping, and tax
+
 from __future__ import print_function
 
 import base64
@@ -15,14 +17,14 @@ from tkinter import filedialog
 import pandas as pd
 
 
-class Ret:
+class Ret:  # defines ret, which is the variable returned by the main function create_message.
     def __init__(self):
-        self.body = ""
-        self.total_price = 0
-        self.tax = 0
+        self.body = ""  # initialize email body as string
+        self.total_price = 0  # initialize total price as number
+        self.tax = 0  # initialize tax as number
 
 
-def open_service():
+def open_service():  # this establishes the connection between the draft message and the gmail account to send from
     SCOPES = ['https://mail.google.com/']
     if os.path.exists("C:/Python/Projects/etsy/token.pickle"):
         with open("C:/Python/Projects/etsy/token.pickle", 'rb') as token:
@@ -44,10 +46,11 @@ def open_service():
 
 
 def create_message(sender, to, subject, item_list, pay_method, taxable, pickup):
-    ret = Ret()
+    ret = Ret()  # initializes return variable
     tax_rate = 0.0725
     # Create the plain-text and HTML version of your message
 
+    # form email, variable portion goes in the <div> section
     html = """\
     <html>
     <body>
@@ -70,19 +73,19 @@ def create_message(sender, to, subject, item_list, pay_method, taxable, pickup):
     </html>
         """
 
-    insert = ""
-    total = item_list["Price"].astype(float).sum()
-    if total > 100:
+    insert = ""  # initializes variable portion of email
+    total = item_list["Price"].astype(float).sum()  # calculates total for buyer
+    if total > 100:  # calculates shipping based on total price and shipping preference (default is $5)
         shipping_price = 0
     elif pickup == 'Y':
         shipping_price = 0
     else:
         shipping_price = 5
-    total_price = total + shipping_price
+    total_price = total + shipping_price  # updates total order price
 
     num_items = len(item_list)
 
-    if pay_method == "venmo":
+    if pay_method == "venmo":  # email portion depending on payment type
 
         insert += """\
         <p>If you have requested to pay via Venmo, you should soon receive a request from 
@@ -99,6 +102,7 @@ def create_message(sender, to, subject, item_list, pay_method, taxable, pickup):
         insert += """\
         <p>For payments with Zelle or Quickpay, please send payment to Anthony Dodge - dodg0091@umn.edu. </p> </p> """
 
+    # initialize table of items and prices
     insert += """\
         <style>
       table,
@@ -116,22 +120,24 @@ def create_message(sender, to, subject, item_list, pay_method, taxable, pickup):
           </tr>
           """
 
+    # fill table of items and prices
     for i in range(num_items):
         insert += '<tr><td>' + item_list.iloc[i]['Names'] + '</td><td>' + str(
             "{:.2f}".format(float(item_list.iloc[i]['Price']))) + '</td></tr>'
 
-    tax = 0
-    if taxable == 'Y':
+    tax = 0  # initialize tax
+    if taxable == 'Y':  # calculates and adds tax to total price and invoice, if applicable
         tax = total * tax_rate
         insert += '<tr><td><i>Tax:</i></td><td><i>' + str("{:.2f}".format(tax)) + '</i></td></tr></table>'
         total_price = total_price + tax
 
+    # adds shipping to invoice table
     insert += '<tr><td><i><u>Shipping</u></i></td><td><i><u>' + str("{:.2f}".format(shipping_price)) + '</u></i></td' \
                                                                                                        '></tr> '
-
+    # adds total price to invoice table
     insert += '<tr><td><b>Total:</b></td><td><b>' + str("{:.2f}".format(total_price)) + '<b></td></tr></table>'
 
-    soup = Soup(html, features="html.parser")
+    soup = Soup(html, features="html.parser")  # program to niceley handle html code for email
     soup.div.append(Soup('<div>' + insert + '</div>', features="html.parser"))
 
     # print(soup)
@@ -141,6 +147,7 @@ def create_message(sender, to, subject, item_list, pay_method, taxable, pickup):
     # Add HTML/plain-text parts to MIMEMultipart message
     # The email client will try to render the last part first
 
+    # generates email message
     message = MIMEText(soup, 'html')
     message["Subject"] = subject
     message["From"] = sender
@@ -154,6 +161,7 @@ def create_message(sender, to, subject, item_list, pay_method, taxable, pickup):
     return ret
 
 
+# NOT USED YET but could generate a draft to save to the gmail inbox rather than an actual message...not sure if useful, copypasta
 def create_draft(user_id, message_body):
     service = open_service()
     try:
@@ -168,6 +176,7 @@ def create_draft(user_id, message_body):
         return None
 
 
+# function to send generated email message
 def send_message(user_id, message):
     service = open_service()
     try:
