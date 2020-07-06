@@ -19,6 +19,7 @@ class Ret:
     def __init__(self):
         self.body = ""
         self.total_price = 0
+        self.tax = 0
 
 
 def open_service():
@@ -119,6 +120,7 @@ def create_message(sender, to, subject, item_list, pay_method, taxable, pickup):
         insert += '<tr><td>' + item_list.iloc[i]['Names'] + '</td><td>' + str(
             "{:.2f}".format(float(item_list.iloc[i]['Price']))) + '</td></tr>'
 
+    tax = 0
     if taxable == 'Y':
         tax = total * tax_rate
         insert += '<tr><td><i>Tax:</i></td><td><i>' + str("{:.2f}".format(tax)) + '</i></td></tr></table>'
@@ -148,6 +150,7 @@ def create_message(sender, to, subject, item_list, pay_method, taxable, pickup):
     raw = raw.decode()
     ret.body = {'raw': raw}
     ret.total_price = total_price
+    ret.tax = tax
     return ret
 
 

@@ -31,6 +31,8 @@ nb = len(buyers)
 
 subject = "Your Succielife Invoice"
 
+total_tax = 0
+
 for b in range(nb):
     #print('b='+str(b))
     print(buyers[b])
@@ -44,8 +46,11 @@ for b in range(nb):
     pickup = data_b.iloc[0]['Pickup?']
     ret = create_message("succielife@gmail.com",buyer_email,subject,item_list,pay_method,taxable,pickup)
     send_message("me",ret.body)
+    total_tax = total_tax + ret.tax
     if pay_method=='venmo':
         try:
             venmo_req(venmo,data_b.iloc[0]['Venmo Username'], float(ret.total_price), "Succielife! Thank you!")
         except:
             print("Couldn't generate Venmo request for: " + data_b.iloc[0]['Instagram User'] + " (Venmo user: " + data_b.iloc[0]['Venmo Username'] + ")")
+
+print("Total CA tax: "+total_tax)
