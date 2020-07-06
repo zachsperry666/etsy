@@ -58,4 +58,4 @@ for b in range(nb): # this loop runs once for each unique buyer
         except:
             print("Couldn't generate Venmo request for: " + data_b.iloc[0]['Instagram User'] + " (Venmo user: " + data_b.iloc[0]['Venmo Username'] + ")") # reports venmo error
 
-print("Total CA tax: "+total_tax) # prints total tax to console
+print("Total CA tax: "+str(total_tax)) # prints total tax to console
