@@ -1,3 +1,5 @@
+# I stole this from a coworker...thanks Marius! He stole it from someone else, so all's fair. Reads google spreadsheets
+
 """
 Script to read multiple tabs of a google spreadsheet and write it as csv files.
 
