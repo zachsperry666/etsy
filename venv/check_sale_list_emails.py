@@ -9,6 +9,7 @@ from tkinter import filedialog
 import pandas as pd
 from get_google_sheet import gsheet2df, open_service
 import re
+from df2gspread import df2gspread as dg2
 
 # for custom mails use: '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$'
 
@@ -27,6 +28,7 @@ def check(email):
 
 
 def load_and_check(): # main loop to check if all required info for live sale is in master customer list, if true then generates merged data table
+    stop_on_error = False
     root = tk.Tk() # this is important for some reason to use Tk()
     root.withdraw()
 
@@ -40,7 +42,7 @@ def load_and_check(): # main loop to check if all required info for live sale is
 
     invoice_sheet = open_service(SALES_ID, input('Input Live Sale Sheet ID: ')) #identify tab of live sale sheet to reference, can use "Live Sale Test" as sandbox
     master_sheet = open_service(MASTER_ID, 'Sheet1') #gets master customer list
-    invoice_data = gsheet2df(invoice_sheet).drop_duplicates() #converts spreadsheet to pandas dataframe
+    invoice_data = gsheet2df(invoice_sheet.sheet).drop_duplicates() #converts spreadsheet to pandas dataframe
     print(invoice_data)
     invoice_data["Instagram User"] = invoice_data["Instagram User"].str.lower()
 
@@ -48,7 +50,7 @@ def load_and_check(): # main loop to check if all required info for live sale is
 
     # master_data = pd.read_excel(master_file_path)
 
-    master_data = gsheet2df(master_sheet).drop_duplicates() # gets rid of duplicates in the customer list
+    master_data = gsheet2df(master_sheet.sheet).drop_duplicates() # gets rid of duplicates in the customer list
     master_data["Instagram User"] = master_data["Instagram User"].str.lower().str.strip() # cleans up potential extra spaces
     master_data["Payment"] = master_data["Payment"].str.lower().str.strip()
 
@@ -61,6 +63,13 @@ def load_and_check(): # main loop to check if all required info for live sale is
     error_table_email2 = data["Instagram User"][data["Email"].isna()]
     error_table_venmo = data["Instagram User"][data["Venmo Username"].isna() & data["Payment"] == "venmo"] #checks for empty venmo user
     error_table_pay = data["Instagram User"][data["Payment"].isna()] #checks for empty payment preference
+
+    data_invoice = data[(data["Email"]!="") & (~(data["Email"].isna())) & (
+        ~(data["Venmo Username"].isna() & data["Payment"] == "venmo")) & (~(data["Payment"].isna()))]
+    data_wait = data[(data["Email"]=="") | (data["Email"].isna()) | (data["Venmo Username"].isna() | data["Payment"] == "venmo") | (data["Payment"].isna())]
+
+    if len(data_wait) > 0 :
+        data_wait = data_wait[["Instagram User","ID","Names","Price"]]
 
     pd.set_option('display.max_rows', None) #setting to print entire data frame to console (otherwise it abridges)
 
@@ -90,10 +99,14 @@ def load_and_check(): # main loop to check if all required info for live sale is
     else:
         print("All payment found!")
 
-    if stop:
+    if len(data_wait) > 0:
+        wks_name = 'Pending Invoices'
+        dg2.upload(data_wait, SALES_ID, wks_name)
+
+    if stop & stop_on_error:
         return stop
     else:
-        return data
+        return data_invoice
 
 if __name__==('__main__'): #just runs load_and_check
     load_and_check()

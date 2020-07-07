@@ -22,11 +22,17 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 import pandas as pd
 
-
 KEY = 'AIzaSyBC7aKmx2OD58hUnMb9pIFEwKLgtczCY0Y'
 
 
-def open_service(sheet_id,range):
+class Service:
+    def __init__(self):
+        self.sheet = ""
+        self.creds = ""
+
+
+def open_service(sheet_id, range):
+    serv = Service()
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets', "https://www.googleapis.com/auth/drive"]
     if os.path.exists("C:/Python/Projects/etsy/token.pickle"):
         with open("C:/Python/Projects/etsy/token.pickle", 'rb') as token:
@@ -44,8 +50,9 @@ def open_service(sheet_id,range):
             pickle.dump(creds, token)
 
     service = build('sheets', 'v4', credentials=creds)
-    sheet = service.spreadsheets().values().get(spreadsheetId=sheet_id, range=range).execute()
-    return sheet
+    serv.sheet = service.spreadsheets().values().get(spreadsheetId=sheet_id, range=range).execute()
+    serv.creds = creds
+    return serv
 
 
 def gsheet2df(gsheet):
