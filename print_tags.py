@@ -23,6 +23,7 @@ print('Collecting receipts...')
 i = 1
 receipts_all = list()
 receipts_this = etsy.findAllShopReceipts(shop_id='19387834', min_created=unixtime, limit=100, page=i)
+time.sleep(0.2)
 
 # above gets recent receipts, along with while loop below (has to go through multiple pages because of API interface)
 
@@ -30,7 +31,7 @@ while len(receipts_this) > 0:
     i = i + 1
     receipts_all.extend(receipts_this)
     receipts_this = etsy.findAllShopReceipts(shop_id='19387834', min_created=unixtime, limit=100, page=i)
-    time.sleep(0.12)
+    time.sleep(0.2)
 
 print('Receipts collected...')
 data = pd.DataFrame(receipts_all) # converts to dataframe
@@ -79,7 +80,7 @@ for b in range(nb):  # loop runs for each unique buyer
         # print(receipt_this)
         transactions_this = etsy.findAllShop_Receipt2Transactions(receipt_id=receipt_this,
                                                                   limit=100)  # gets all transactions (items) for this receipt (order)
-        time.sleep(0.12) # waits a bit so we don't freak out the etsy API
+        time.sleep(0.2) # waits a bit so we don't freak out the etsy API
         receipt_obj = next(item for item in receipts_all if item["receipt_id"] == receipt_this) # i genuinely forgot what this does
         # receipt_obj = receipt_obj[0]
         if not (receipt_obj['message_from_buyer'] is None): # gets message from buyer, if applicable
