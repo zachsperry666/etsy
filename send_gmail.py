@@ -30,12 +30,12 @@ def open_service():  # this establishes the connection between the draft message
         with open("C:/Python/Projects/etsy/token.pickle", 'rb') as token:
             creds = pickle.load(token)
     # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
+    if not('creds' in locals()) or not creds or not creds.valid:
+        if 'creds' in locals() and creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
+                'C:\Python\Projects\etsy\credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open('token.pickle', 'wb') as token:
@@ -51,6 +51,10 @@ def create_message(sender, to, subject, item_list, pay_method, taxable, pickup):
     # Create the plain-text and HTML version of your message
 
     # form email, variable portion goes in the <div> section
+
+    #  <p><b>Click <a href="https://cutt.ly/succielifetshirt">here</a> to pre-order your SuccieLife t-shirt,
+    #  20% off for a limited time!</b></p>
+
     html = """\
     <html>
     <body>
@@ -58,7 +62,7 @@ def create_message(sender, to, subject, item_list, pay_method, taxable, pickup):
     <h2>Your Succielife Invoice</h2>
     
     <p>Thank you for tuning in to another live sale! Please find your invoice and instructions for payment below.</p>
-
+    
     <div>
     </div>
     
