@@ -26,7 +26,6 @@ def check(email):
     test=test[""]
     return test
 
-
 def load_and_check(): # main loop to check if all required info for live sale is in master customer list, if true then generates merged data table
     stop_on_error = False
     root = tk.Tk() # this is important for some reason to use Tk()
@@ -61,6 +60,7 @@ def load_and_check(): # main loop to check if all required info for live sale is
 
     error_table_email1 = data["Instagram User"][data["Email"]==''] #checks for empty email
     error_table_email2 = data["Instagram User"][data["Email"].isna()]
+    error_table_email3 = data["Instagram User"][data["Email"]=='succielife@gmail.com']
     error_table_venmo = data["Instagram User"][data["Venmo Username"].isna() & data["Payment"] == "venmo"] #checks for empty venmo user
     error_table_pay = data["Instagram User"][data["Payment"].isna()] #checks for empty payment preference
 

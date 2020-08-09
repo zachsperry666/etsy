@@ -54,6 +54,7 @@ for b in range(nb): # this loop runs once for each unique buyer
     total_tax = total_tax + ret.tax
     if pay_method=='venmo':
         try:
+            # print('no venmo request sent')
             venmo_req(venmo,data_b.iloc[0]['Venmo Username'], float(ret.total_price), "Succielife! Thank you!") # generates venmo request
         except:
             print("Couldn't generate Venmo request for: " + data_b.iloc[0]['Instagram User'] + " (Venmo user: " + data_b.iloc[0]['Venmo Username'] + ")") # reports venmo error

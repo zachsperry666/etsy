@@ -30,7 +30,7 @@ def open_service():  # this establishes the connection between the draft message
         with open("C:/Python/Projects/etsy/token.pickle", 'rb') as token:
             creds = pickle.load(token)
     # If there are no (valid) credentials available, let the user log in.
-    if not('creds' in locals()) or not creds or not creds.valid:
+    if not ('creds' in locals()) or not creds or not creds.valid:
         if 'creds' in locals() and creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
@@ -59,90 +59,85 @@ def create_message(sender, to, subject, item_list, pay_method, taxable, pickup):
     <html>
     <body>
 
-    <h2>Your Succielife T-Shirt Preorder Invoice</h2>
-    
-    <p>Thank you for preordering your Succielife t-shirt! Please find your invoice and instructions for payment below.</p>
-    
-    <div>
-    </div>
-    
-    <p>If you would like to combine your live sale order with an Etsy order, we are happy to do so! Just send me a 
-    message after you place your order on Etsy. Our Etsy shop can be found <a href="www.succielife.etsy.com">here</a>.</p> 
-    
+    <h2>Succielife T-Shirt Preorder Info</h2>
+
+    <p><b>Click <a href="https://cutt.ly/succielifetshirt">here</a> to pre-order your SuccieLife t-shirt,
+    20% off ENDS TODAY 8/2!</b></p>
+
     <p>Thank you for your support of our small business! Plants will be shipped in the next few days. If you ever 
     have comments, questions, or concerns, please don’t hesitate to reach out to us on <a 
     href="https://www.instagram.com/succielife">Instagram (@succielife)</a>.</p> 
-    
+
     </body>
     </html>
         """
 
     insert = ""  # initializes variable portion of email
-    total = item_list["Price"].astype(float).sum()  # calculates total for buyer
-    if total > 100:  # calculates shipping based on total price and shipping preference (default is $5)
-        shipping_price = 0
-    elif pickup == 'Y':
-        shipping_price = 0
-    else:
-        shipping_price = 5
-    total_price = total + shipping_price  # updates total order price
-
-    num_items = len(item_list)
-
-    if pay_method == "venmo":  # email portion depending on payment type
-
-        insert += """\
-        <p>If you have requested to pay via Venmo, you should soon receive a request from 
-        Anthony-Dodge. Please hit 'Pay' on the request to complete. If you do not receive a request, please let us 
-        know. </p> """
-
-    elif pay_method == "paypal":
-
-        insert += """\
-        <p>For payments via Paypal, please send payment for invoice total to succielife@gmail.com. You 
-        can start the process <a href="https://www.paypal.com/us/for-you/transfer-money/send-money">here</a>.</p> """
-
-    else:
-        insert += """\
-        <p>For payments with Zelle or Quickpay, please send payment to Anthony Dodge - dodg0091@umn.edu. </p> </p> """
-
-    # initialize table of items and prices
-    insert += """\
-        <style>
-      table,
-      th,
-      td {
-        padding: 10px;
-        border: 1px solid black;
-        border-collapse: collapse;
-      }
-    </style>
-        <table style="width:50%">
-          <tr>
-            <th align="left"><u>Item Name</u></th>
-            <th align="left"><u>Price</u></th>
-          </tr>
-          """
-
-    # fill table of items and prices
-    for i in range(num_items):
-        insert += '<tr><td>' + item_list.iloc[i]['Names'] + '</td><td>' + str(
-            "{:.2f}".format(float(item_list.iloc[i]['Price']))) + '</td></tr>'
-
-    tax = 0  # initialize tax
-    if taxable == 'Y':  # calculates and adds tax to total price and invoice, if applicable
-        tax = total * tax_rate
-        insert += '<tr><td><i>Tax:</i></td><td><i>' + str("{:.2f}".format(tax)) + '</i></td></tr></table>'
-        total_price = total_price + tax
-
-    # adds shipping to invoice table
-    insert += '<tr><td><i><u>Shipping</u></i></td><td><i><u>' + str("{:.2f}".format(shipping_price)) + '</u></i></td' \
-                                                                                                       '></tr> '
-    # adds total price to invoice table
-    insert += '<tr><td><b>Total:</b></td><td><b>' + str("{:.2f}".format(total_price)) + '<b></td></tr></table>'
+    # total = item_list["Price"].astype(float).sum()  # calculates total for buyer
+    # if total > 100:  # calculates shipping based on total price and shipping preference (default is $5)
+    #     shipping_price = 0
+    # elif pickup == 'Y':
+    #     shipping_price = 0
+    # else:
+    #     shipping_price = 5
+    # total_price = total + shipping_price  # updates total order price
+    #
+    # num_items = len(item_list)
+    #
+    # if pay_method == "venmo":  # email portion depending on payment type
+    #
+    #     insert += """\
+    #     <p>If you have requested to pay via Venmo, you should soon receive a request from
+    #     Anthony-Dodge. Please hit 'Pay' on the request to complete. If you do not receive a request, please let us
+    #     know. </p> """
+    #
+    # elif pay_method == "paypal":
+    #
+    #     insert += """\
+    #     <p>For payments via Paypal, please send payment for invoice total to succielife@gmail.com. You
+    #     can start the process <a href="https://www.paypal.com/us/for-you/transfer-money/send-money">here</a>.</p> """
+    #
+    # else:
+    #     insert += """\
+    #     <p>For payments with Zelle or Quickpay, please send payment to Anthony Dodge - dodg0091@umn.edu. </p> </p> """
+    #
+    # # initialize table of items and prices
+    # insert += """\
+    #     <style>
+    #   table,
+    #   th,
+    #   td {
+    #     padding: 10px;
+    #     border: 1px solid black;
+    #     border-collapse: collapse;
+    #   }
+    # </style>
+    #     <table style="width:50%">
+    #       <tr>
+    #         <th align="left"><u>Item Name</u></th>
+    #         <th align="left"><u>Price</u></th>
+    #       </tr>
+    #       """
+    #
+    # # fill table of items and prices
+    # for i in range(num_items):
+    #     insert += '<tr><td>' + item_list.iloc[i]['Names'] + '</td><td>' + str(
+    #         "{:.2f}".format(float(item_list.iloc[i]['Price']))) + '</td></tr>'
+    #
+    # tax = 0  # initialize tax
+    # if taxable == 'Y':  # calculates and adds tax to total price and invoice, if applicable
+    #     tax = total * tax_rate
+    #     insert += '<tr><td><i>Tax:</i></td><td><i>' + str("{:.2f}".format(tax)) + '</i></td></tr></table>'
+    #     total_price = total_price + tax
+    #
+    # # adds shipping to invoice table
+    # insert += '<tr><td><i><u>Shipping</u></i></td><td><i><u>' + str("{:.2f}".format(shipping_price)) + '</u></i></td' \
+    #                                                                                                    '></tr> '
+    # # adds total price to invoice table
+    # insert += '<tr><td><b>Total:</b></td><td><b>' + str("{:.2f}".format(total_price)) + '<b></td></tr></table>'
 
     soup = Soup(html, features="html.parser")  # program to niceley handle html code for email
-    soup.div.append(Soup('<div>' + insert + '</div>', features="html.parser"))
+    # soup.div.append(Soup('<div>' + insert + '</div>', features="html.parser"))
 
     # print(soup)
 
@@ -160,8 +155,8 @@ def create_message(sender, to, subject, item_list, pay_method, taxable, pickup):
     raw = base64.urlsafe_b64encode(message.as_bytes())
     raw = raw.decode()
     ret.body = {'raw': raw}
-    ret.total_price = total_price
-    ret.tax = tax
+    ret.total_price = 0
+    ret.tax = 0
     return ret
 
 

@@ -66,10 +66,7 @@ def create_message(sender, to, subject, item_list, pay_method, taxable, pickup):
     <div>
     </div>
     
-    <p>If you would like to combine your live sale order with an Etsy order, we are happy to do so! Just send me a 
-    message after you place your order on Etsy. Our Etsy shop can be found <a href="www.succielife.etsy.com">here</a>.</p> 
-    
-    <p>Thank you for your support of our small business! Plants will be shipped in the next few days. If you ever 
+    <p>Thank you for your support of our small business! Shirts will be shipped once they arrive in several weeks. If you ever 
     have comments, questions, or concerns, please don’t hesitate to reach out to us on <a 
     href="https://www.instagram.com/succielife">Instagram (@succielife)</a>.</p> 
     
