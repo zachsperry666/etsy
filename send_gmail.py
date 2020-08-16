@@ -30,7 +30,7 @@ def open_service():  # this establishes the connection between the draft message
         with open("C:/Python/Projects/etsy/token.pickle", 'rb') as token:
             creds = pickle.load(token)
     # If there are no (valid) credentials available, let the user log in.
-    if not('creds' in locals()) or not creds or not creds.valid:
+    if not ('creds' in locals()) or not creds or not creds.valid:
         if 'creds' in locals() and creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
@@ -45,7 +45,7 @@ def open_service():  # this establishes the connection between the draft message
     return service
 
 
-def create_message(sender, to, subject, item_list, pay_method, taxable, pickup):
+def create_message(sender, to, subject, item_list, pay_method, taxable, pickup, shipping):
     ret = Ret()  # initializes return variable
     tax_rate = 0.0725
     # Create the plain-text and HTML version of your message
@@ -59,9 +59,9 @@ def create_message(sender, to, subject, item_list, pay_method, taxable, pickup):
     <html>
     <body>
 
-    <h2>Your Succielife T-Shirt Preorder Invoice</h2>
+    <h2>Your Succielife Invoice</h2>
     
-    <p>Thank you for preordering your Succielife t-shirt! Please find your invoice and instructions for payment below.</p>
+    <p>Thank you for tuning in to another live sale! Please find your invoice and instructions for payment below.</p>
     
     <div>
     </div>
@@ -88,6 +88,15 @@ def create_message(sender, to, subject, item_list, pay_method, taxable, pickup):
     total_price = total + shipping_price  # updates total order price
 
     num_items = len(item_list)
+
+    if pickup == 'Y':
+        addr_insert = "Pickup"
+    elif pickup == "N":
+        addr_insert = shipping.replace('\n', '<br>')
+        print(repr(shipping))
+
+    insert += "<p>Shipping address on file:</p>"
+    insert += "<p>" + addr_insert + "</p>"
 
     if pay_method == "venmo":  # email portion depending on payment type
 

@@ -17,46 +17,62 @@ from check_sale_list_emails import load_and_check
 
 # invoice_data = pd.read_excel(invoice_file_path)
 
-output = load_and_check() # function from check_sale_list_emails to merge live sale and master customer list
+def send_invoices(report_only=True):
 
-if type(output)==bool: # don't proceed if output is a boolean, which means that load_and_check threw an error
-    if output:
-        exit()
-else: #if no error, proceeds with program
-    data=output
-    print(data)
+    output = load_and_check() # function from check_sale_list_emails to merge live sale and master customer list
 
-venmo = venmo_auth() # initializes venmo connection
+    if type(output) == bool:  # don't proceed if output is a boolean, which means that load_and_check threw an error
+        if output:
+            exit()
+    else:  # if no error, proceeds with program
+        data = output
+        print(data)
 
-buyers = data["Instagram User"].unique() # get unique list of buyers, as instagram usernames
+    venmo = venmo_auth()  # initializes venmo connection
 
-nb = len(buyers) # number of unique buyers
+    buyers = data["Instagram User"].unique()  # get unique list of buyers, as instagram usernames
 
-#print(nb)
+    nb = len(buyers)  # number of unique buyers
 
-subject = "Your Succielife Invoice" # subject line of email
+    # print(nb)
 
-total_tax = 0 # initialize total tax sum
+    subject = "Your Succielife Invoice"  # subject line of email
 
-for b in range(nb): # this loop runs once for each unique buyer
-    #print('b='+str(b))
-    print(buyers[b]) # buyer name printed to console
-    data_b = data[data["Instagram User"] == buyers[b]] # gets list of items and information for this buyer
-    item_list=pd.DataFrame(columns=['Names','Price'])
-    item_list["Names"] = data_b["Names"]
-    item_list["Price"] = data_b["Price"]
-    pay_method = data_b.iloc[0]['Payment']
-    buyer_email = data_b.iloc[0]['Email']
-    taxable = data_b.iloc[0]['California?']
-    pickup = data_b.iloc[0]['Pickup?']
-    ret = create_message("succielife@gmail.com",buyer_email,subject,item_list,pay_method,taxable,pickup) # generates email, gets total and tax info
-    send_message("me",ret.body) # sends email
-    total_tax = total_tax + ret.tax
-    if pay_method=='venmo':
-        try:
-            # print('no venmo request sent')
-            venmo_req(venmo,data_b.iloc[0]['Venmo Username'], float(ret.total_price), "Succielife! Thank you!") # generates venmo request
-        except:
-            print("Couldn't generate Venmo request for: " + data_b.iloc[0]['Instagram User'] + " (Venmo user: " + data_b.iloc[0]['Venmo Username'] + ")") # reports venmo error
+    total_tax = 0  # initialize total tax sum
 
-print("Total CA tax: "+str(total_tax)) # prints total tax to console
+    for b in range(nb):  # this loop runs once for each unique buyer
+        # print('b='+str(b))
+        print(buyers[b])  # buyer name printed to console
+        data_b = data[data["Instagram User"] == buyers[b]]  # gets list of items and information for this buyer
+        item_list = pd.DataFrame(columns=['Names', 'Price'])
+        item_list["Names"] = data_b["Names"]
+        item_list["Price"] = data_b["Price"]
+        pay_method = data_b.iloc[0]['Payment']
+        buyer_email = data_b.iloc[0]['Email']
+        taxable = data_b.iloc[0]['California?']
+        pickup = data_b.iloc[0]['Pickup?']
+        shipping = data_b.iloc[0]['Address']
+        ret = create_message("succielife@gmail.com", buyer_email, subject, item_list, pay_method, taxable,
+                             pickup, shipping)  # generates email, gets total and tax info
+        if not(report_only):
+            send_message("me", ret.body)  # sends email
+        total_tax = total_tax + ret.tax
+        if pay_method == 'venmo':
+            try:
+                # print('no venmo request sent')
+                if not(report_only):
+                    venmo_req(venmo, data_b.iloc[0]['Venmo Username'], float(ret.total_price),
+                        "Succielife! Thank you!")  # generates venmo request
+            except:
+                print("Couldn't generate Venmo request for: " + data_b.iloc[0]['Instagram User'] + " (Venmo user: " +
+                    data_b.iloc[0]['Venmo Username'] + ")")  # reports venmo error
+
+    print("Total CA tax: " + str(total_tax))  # prints total tax to console
+
+if __name__=="__main__":
+    ro = input("Generate report only (r) / Send invoices (i): ")
+    if ro=="r":
+        send_invoices()
+    elif ro=="i":
+        send_invoices(False)
+
